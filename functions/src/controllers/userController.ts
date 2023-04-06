@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { MongoClient, ObjectId, InsertOneResult } from "mongodb";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { OAuth2Client } from "google-auth-library";
+import { OAuth2Client } from "google-auth-library/build/src/auth/oauth2client";
 import config from "../config";
 
 const client = new OAuth2Client(

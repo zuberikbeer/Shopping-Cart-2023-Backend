@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.googleSignIn = exports.loginUser = exports.registerUser = void 0;
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const google_auth_library_1 = require("google-auth-library");
+const oauth2client_1 = require("google-auth-library/build/src/auth/oauth2client");
 const config_1 = __importDefault(require("../config"));
-const client = new google_auth_library_1.OAuth2Client("427752898275-knf3lj28r0uhm0miv1dc85i433f424ov.apps.googleusercontent.com");
+const client = new oauth2client_1.OAuth2Client("427752898275-knf3lj28r0uhm0miv1dc85i433f424ov.apps.googleusercontent.com");
 const registerUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, password } = req.body;
