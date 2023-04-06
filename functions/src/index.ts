@@ -1,10 +1,12 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import * as functions from "firebase-functions";
 import express from "express";
 import cors from "cors";
 import itemsRouter from "./routes/itemsRouter";
 import accountRouter from "./routes/accountRouter";
-import dotenv from "dotenv";
-dotenv.config();
+
 // defines Express server that is used to handle our HTTP requests.
 
 const app = express();

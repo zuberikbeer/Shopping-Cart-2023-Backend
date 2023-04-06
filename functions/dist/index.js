@@ -27,13 +27,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.api = void 0;
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const functions = __importStar(require("firebase-functions"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const itemsRouter_1 = __importDefault(require("./routes/itemsRouter"));
 const accountRouter_1 = __importDefault(require("./routes/accountRouter"));
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
 // defines Express server that is used to handle our HTTP requests.
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
