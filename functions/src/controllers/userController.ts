@@ -79,7 +79,7 @@ export const googleSignIn = async (req: Request, res: Response) => {
         googleId: sub,
         email,
       });
-      user = { email, googleId: sub, _id: newUser.insertedId }; // Use insertedId
+      user = { email, googleId: sub, _id: newUser.insertedId };
     }
     const token = jwt.sign({ id: user?._id }, config.jwtSecret, {
       expiresIn: "1h",

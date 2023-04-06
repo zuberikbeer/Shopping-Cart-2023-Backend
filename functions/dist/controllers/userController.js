@@ -81,7 +81,7 @@ const googleSignIn = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 googleId: sub,
                 email,
             });
-            user = { email, googleId: sub, _id: newUser.insertedId }; // Use insertedId
+            user = { email, googleId: sub, _id: newUser.insertedId };
         }
         const token = jsonwebtoken_1.default.sign({ id: user === null || user === void 0 ? void 0 : user._id }, config_1.default.jwtSecret, {
             expiresIn: "1h",
