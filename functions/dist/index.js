@@ -31,10 +31,8 @@ const functions = __importStar(require("firebase-functions"));
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const accountRouter_1 = __importDefault(require("./routes/accountRouter"));
-const dotenv_1 = __importDefault(require("dotenv"));
 // defines Express server that is used to handle our HTTP requests.
 const app = (0, express_1.default)();
-dotenv_1.default.config();
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use("/account", accountRouter_1.default);
