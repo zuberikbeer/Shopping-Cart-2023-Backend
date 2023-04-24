@@ -1,6 +1,7 @@
 import express from "express";
 import { getClient } from "../db";
 import Account from "../models/Account";
+import { ObjectId } from "mongodb";
 
 const accountRouter = express.Router();
 
@@ -19,65 +20,75 @@ accountRouter.get("/", async (req, res) => {
     errorResponse(err, res);
   }
 });
+accountRouter.get("/user/:uid", async (req, res) => {
+  const uid: string = req.params.uid;
+  try {
+    const client = await getClient();
+    const cursor = client
+      .db()
+      .collection<Account>("account")
+      .findOne({ uid: uid });
+    const results = await cursor;
+    if (results) {
+      res.json(results);
+    } else {
+      res.status(404).json({ message: "uid not found" });
+    }
+  } catch (err) {
+    errorResponse(err, res);
+  }
+});
 
 // Create a new account
 accountRouter.post("/addAccount", async (req, res) => {
   const newAccount: Account = req.body;
   try {
     const client = await getClient();
-    const result = await client
-      .db()
-      .collection<Account>("account")
-      .insertOne(newAccount);
-    res.status(201).json(result.insertedId);
+    await client.db().collection<Account>("account").insertOne(newAccount);
+    res.status(201).json(newAccount);
   } catch (error) {
     errorResponse(error, res);
   }
 });
 
-accountRouter.post("/login", async (req, res) => {
+accountRouter.put("/:id", async (req, res) => {
+  const id: string = req.params.id;
+  const updatedAccount: Account = req.body;
+  delete updatedAccount._id;
   try {
     const client = await getClient();
-    console.log(
-      "Received email and password:",
-      req.body.email,
-      req.body.password
-    );
-
-    // Query the database for an account with a matching email
-    const account = await client
-      .db("Shop")
+    const result = await client
+      .db()
       .collection<Account>("account")
-      .findOne({ email: req.body.email });
-
-    console.log("Retrieved account from the database:", account);
-
-    // Check if the account was found
-    if (!account) {
-      console.log("Account not found:", req.body.email);
-      res.status(401).json({ message: "Invalid email or password" });
-      return;
+      .replaceOne({ _id: new Object(id) }, updatedAccount);
+    if (result.matchedCount) {
+      updatedAccount._id = new ObjectId(id);
+      res.status(200).json(updatedAccount);
+    } else {
+      res.status(404).json({ message: `${id} not found` });
     }
+  } catch (err) {
+    errorResponse(err, res);
+  }
+});
 
-    // Check if the submitted password matches the account's password
-    if (account.password !== req.body.password) {
-      console.log("Incorrect password for:", req.body.email);
-      res.status(401).json({ message: "Invalid email or password" });
-      return;
+accountRouter.delete("/:id", async (req, res) => {
+  const idToDelete: string = req.params.id;
+  try {
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<Account>("account")
+      .deleteOne({ _id: new ObjectId(idToDelete) });
+    if (result.deletedCount > 0) {
+      // something was deleted
+      res.sendStatus(204);
+    } else {
+      // didn't delete anything (not found)
+      res.status(404).json({ message: "User not found" });
     }
-
-    // Authentication succeeded
-    res.status(200).json({
-      message: "Authentication succeeded",
-      account: {
-        _id: account._id,
-        email: account.email,
-        userName: account.userName,
-      },
-    });
-  } catch (error) {
-    console.log("Error during login:", error);
-    errorResponse(error, res);
+  } catch (err) {
+    errorResponse(err, res);
   }
 });
 
